@@ -30,21 +30,23 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} ${draco_LIBRARY_DIR}
   CATKIN_DEPENDS dynamic_reconfigure point_cloud_transport sensor_msgs std_msgs message_runtime
-  DEPENDS Draco
+  DEPENDS draco
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS} ${draco_INCLUDE_DIR}/..)
+include_directories(include
+        ${catkin_INCLUDE_DIRS}
+        ${draco_INCLUDE_DIR}/..
+        ${draco_INCLUDE_DIR})
+
 link_directories(${draco_LIBRARY_DIR})
 
 add_library(${PROJECT_NAME}
         src/draco_publisher.cpp
         src/draco_subscriber.cpp
-        src/manifest.cpp
-        src/DracotoPC2.cpp
-        src/PC2toDraco.cpp)
+        src/manifest.cpp)
 
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_gencfg draco_point_cloud_transport_generate_messages_cpp)
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_gencfg draco_point_cloud_transport_generate_messages_cpp draco)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} libdracoenc.so)
 
 class_loader_hide_library_symbols(${PROJECT_NAME})
 

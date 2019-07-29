@@ -1,11 +1,11 @@
 <library path="lib/libdraco_point_cloud_transport">
-  <class name="point_cloud_transport/draco_pub" type="DracoPublisher" base_class_type="point_cloud_transport::PublisherPlugin">
+  <class name="point_cloud_transport/draco_pub" type="draco_point_cloud_transport::DracoPublisher" base_class_type="point_cloud_transport::PublisherPlugin">
     <description>
       This plugin publishes a CompressedPointCloud2 using either KD tree or sequential compression.
     </description>
   </class>
 
-  <class name="point_cloud_transport/draco_sub" type="DracoSubscriber" base_class_type="point_cloud_transport::SubscriberPlugin">
+  <class name="point_cloud_transport/draco_sub" type="draco_point_cloud_transport::DracoSubscriber" base_class_type="point_cloud_transport::SubscriberPlugin">
     <description>
       This plugin decompresses a CompressedPointCloud2 topic.
     </description>

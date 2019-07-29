@@ -11,7 +11,7 @@
 #include <limits>
 #include <vector>
 
-// TODO: replace PointCloud2 in the whole project with ConstPtr
+// TODO: replace PointCloud2 usage in the whole project with ConstPtr
 
 namespace draco_point_cloud_transport
 {
@@ -32,8 +32,8 @@ void DracoSubscriber::subscribeImpl(ros::NodeHandle& nh, const std::string& base
 
 void DracoSubscriber::configCb(Config& config, uint32_t level)
 {
+    //TODO: consider adding SetSkipAttribute to config
   config_ = config;
-  // TODO: config -> ADD SetSkipAttributeTransform?
 }
 
 void DracoSubscriber::shutdown()
@@ -42,7 +42,6 @@ void DracoSubscriber::shutdown()
     point_cloud_transport::SimpleSubscriberPlugin<draco_point_cloud_transport::CompressedPointCloud2>::shutdown();
 }
 
-    // TODO : are ConstPtr typedefs automatic? If not, one must >>> typedef boost::shared_ptr< ::draco_point_cloud_transport::DracoPointCloud2 const> DracoPointCloud2ConstPtr;
 void DracoSubscriber::internalCallback(const draco_point_cloud_transport::CompressedPointCloud2ConstPtr& message,
                                             const Callback& user_cb)
 

@@ -12,8 +12,6 @@
 
 #include <vector>
 
-//include <sstream>
-
 namespace draco_point_cloud_transport
 {
 
