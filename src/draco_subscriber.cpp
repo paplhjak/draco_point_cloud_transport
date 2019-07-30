@@ -3,15 +3,13 @@
 #include "draco_point_cloud_transport/draco_common.h"
 #include "draco_point_cloud_transport/DracotoPC2.h"
 
-
-
 #include "draco/compression/decode.h"
 
 
 #include <limits>
 #include <vector>
 
-// TODO: replace PointCloud2 usage in the whole project with ConstPtr
+// TODO: replace PointCloud2 usage in the whole project (where possible) with ConstPtr
 
 namespace draco_point_cloud_transport
 {
@@ -56,7 +54,6 @@ void DracoSubscriber::internalCallback(const draco_point_cloud_transport::Compre
     }
 
     draco::DecoderBuffer decode_buffer;
-
     std::vector <unsigned char> vec_data = (message->compressed_data);
 
     // Sets the buffer's internal data. Note that no copy of the input data is
@@ -66,28 +63,23 @@ void DracoSubscriber::internalCallback(const draco_point_cloud_transport::Compre
 
     // create decoder object
     draco::Decoder decoder;
-
     // decode buffer into draco point cloud
     std::unique_ptr<draco::PointCloud> decoded_pc =
             decoder.DecodePointCloudFromBuffer(&decode_buffer).value();
 
-    //! --- decoding - END ---
-
-    //! --- Draco to PC2 - START ---
 
     // create and initiate converter object
     DracotoPC2 converter_b(std::move(decoded_pc), message);
     // convert draco point cloud to sensor_msgs::PointCloud2
-    sensor_msgs::PointCloud2 decoded_PC2;
-    decoded_PC2 = converter_b.convert();
 
-    boost::shared_ptr<sensor_msgs::PointCloud2> ptr_PC2(&decoded_PC2);
+    //! Invalid free() / delete / delete[] / realloc() ... possibility: is the pointer being freed when out of scope of draco_subsriber.cpp and before that in point_cloud_transport subsriber plugin?
+    sensor_msgs::PointCloud2 decoded_PC2 = std::move(converter_b.convert()); //! DEBUG: Invalid free() / delete / delete[] / realloc(), at 0x4C3123B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so), by 0x1145CE5F: draco_point_cloud_transport::DracoSubscriber::internalCallback(boost::shared_ptr<draco_point_cloud_transport::CompressedPointCloud2_<std::allocator<void> > const> const&, boost::function<void (boost::shared_ptr<sensor_msgs::PointCloud2_<std::allocator<void> > const> const&)> const&) (draco_subscriber.cpp:78)
 
-
-    //! --- Draco to PC2 - END ---
-
+    sensor_msgs::PointCloud2Ptr ptr_PC2(&decoded_PC2);
     // Publish message to user callback
-    user_cb(ptr_PC2);
+
+
+     user_cb(std::move(ptr_PC2));
 }
 
 } //namespace draco_point_cloud_transport

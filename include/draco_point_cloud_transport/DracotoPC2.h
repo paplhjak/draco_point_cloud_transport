@@ -11,15 +11,15 @@
 
 // point_cloud_transport
 #include "draco_point_cloud_transport/CompressedPointCloud2.h"
-#include "conversion_utilities.h"
+#include "draco_point_cloud_transport/conversion_utilities.h"
 
 class DracotoPC2 {
 public:
     //! Constructor.
-    explicit DracotoPC2(std::unique_ptr<draco::PointCloud> && pc, const draco_point_cloud_transport::CompressedPointCloud2ConstPtr & compressed_PC2);
+    explicit DracotoPC2( std::unique_ptr<draco::PointCloud> && pc, const draco_point_cloud_transport::CompressedPointCloud2ConstPtr & compressed_PC2);
 
     //! Destructor
-    ~DracotoPC2();
+    //~DracotoPC2();
 
     //! Method for converting into sensor_msgs::PointCloud2
     sensor_msgs::PointCloud2 convert();

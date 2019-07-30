@@ -4,6 +4,7 @@
 namespace draco_point_cloud_transport
 {
 
+    //TODO: delete common if no use for it is found
 
 } //namespace draco_point_cloud_transport
 

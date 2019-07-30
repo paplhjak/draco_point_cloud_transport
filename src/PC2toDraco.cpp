@@ -23,27 +23,23 @@ PC2toDraco::PC2toDraco(sensor_msgs::PointCloud2 PC2)
 }
 
 //! Destructor
-PC2toDraco::~PC2toDraco(){}
+//PC2toDraco::~PC2toDraco(){}
 
 //! Method for converting into Draco pointcloud using draco::PointCloudBuilder
 std::unique_ptr<draco::PointCloud> PC2toDraco::convert()
 {
     // object for conversion into Draco Point Cloud format
     draco::PointCloudBuilder builder;
-
     // number of points in point cloud
     uint64_t number_of_points = PC2_.height * PC2_.width;
-
     // initialize builder object, requires prior knowledge of point cloud size for buffer allocation
     builder.Start(number_of_points);
-
     // vector to hold IDs of attributes for builder object
     std::vector<int> att_ids;
-
     // set to 0 if invalid datatype (not in enum) is encountered in PointField
     bool ValidDataType;
 
-    //! fill in att_ids with attributes from PointField[] fields - START
+    // fill in att_ids with attributes from PointField[] fields
     for (sensor_msgs::PointField field : PC2_.fields) {
 
         ValidDataType=1;
@@ -192,17 +188,15 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert()
              builder.SetAttributeValuesForAllPoints(int(att_ids.back()), &PC2_.data[0] + field.offset, PC2_.point_step);
             }
     }
-    //! fill in att_ids with attributes from PointField[] fields - END
-
-    // finalize point cloud - builder.Finalize(bool deduplicate) -
+    // finalize point cloud *** builder.Finalize(bool deduplicate) ***
     std::unique_ptr<draco::PointCloud> pc = builder.Finalize(false);
 
     /*
-   // TODO check if buffer created succesfully
+   // TODO: add check if buffer created succesfully
    ASSERT_TRUE(res != nullptr);
 
 
-   // TODO check if buffer size is correct (DO NOT CHECK if deduplicate is true)
+   // TODO: add check if buffer size is correct (DO NOT CHECK if deduplicate is true)
    ASSERT_EQ(res->num_points(), number_of_points);
     */
     return pc;

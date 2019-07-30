@@ -40,13 +40,20 @@ include_directories(include
 
 link_directories(${draco_LIBRARY_DIR})
 
+#TODO: will not compile, unless Draco compiles shared libraries
+#TODO: to allow this, go to draco/CMakeLists.txt and comment out lines:
+#TODO: 888: if(BUILD_SHARED_LIBS), 890: endif()
+
 add_library(${PROJECT_NAME}
         src/draco_publisher.cpp
         src/draco_subscriber.cpp
-        src/manifest.cpp)
+        src/manifest.cpp
+        src/conversion_utilities.cpp
+        src/DracotoPC2.cpp
+        src/PC2toDraco.cpp)
 
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_gencfg draco_point_cloud_transport_generate_messages_cpp draco)
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} libdracoenc.so)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} libdraco.so)
 
 class_loader_hide_library_symbols(${PROJECT_NAME})
 

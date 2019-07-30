@@ -5,9 +5,3 @@
 PLUGINLIB_EXPORT_CLASS( draco_point_cloud_transport::DracoPublisher, point_cloud_transport::PublisherPlugin)
 
 PLUGINLIB_EXPORT_CLASS( draco_point_cloud_transport::DracoSubscriber, point_cloud_transport::SubscriberPlugin)
-
-/*
-PLUGINLIB_REGISTER_CLASS(draco_pub, DracoPublisher, point_cloud_transport::PublisherPlugin)
-
-PLUGINLIB_REGISTER_CLASS(draco_sub, DracoSubscriber, point_cloud_transport::PublisherPlugin)
- */

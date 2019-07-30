@@ -23,7 +23,7 @@ public:
     explicit PC2toDraco(sensor_msgs::PointCloud2 PC2);
 
     //! Destructor
-    ~PC2toDraco();
+    //~PC2toDraco();
 
     //! Method for converting into Draco pointcloud
     std::unique_ptr<draco::PointCloud> convert();

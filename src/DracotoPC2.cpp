@@ -1,15 +1,17 @@
 #include "draco_point_cloud_transport/DracotoPC2.h"
 #include "debug_msg.h"
 
+//TODO: !!! fix errors, memeory leaks, invalid frees etc .... consider moving the compression process outside of plugin interface for testing
+
 //! Constructor
 DracotoPC2::DracotoPC2(std::unique_ptr<draco::PointCloud> && pc, const draco_point_cloud_transport::CompressedPointCloud2ConstPtr & compressed_PC2)
 {
-    pc_=(std::move(pc));
+    pc_=std::move(pc);
     compressed_PC2_ =  compressed_PC2;
 }
 
 //! Destructor
-DracotoPC2::~DracotoPC2() {}
+//DracotoPC2::~DracotoPC2() {}
 
 //! Method for converting into sensor_msgs::PointCloud2
 sensor_msgs::PointCloud2 DracotoPC2::DracotoPC2::convert(){
@@ -27,7 +29,7 @@ sensor_msgs::PointCloud2 DracotoPC2::DracotoPC2::convert(){
     for (uint32_t att_id = 0 ; att_id < number_of_attributes ; att_id++)
     {
         // get attribute
-        const draco::PointAttribute* attribute = pc_->GetAttributeByUniqueId(att_id);
+        const draco::PointAttribute* attribute = pc_->attribute(att_id); //! DEBUG: Invalid read of size 8 //GetAttributeByUniqueId
 
         // check if attribute is valid
         if (!attribute->IsValid()){
@@ -45,8 +47,7 @@ sensor_msgs::PointCloud2 DracotoPC2::DracotoPC2::convert(){
             uint8_t *out_data = &data[int(compressed_PC2_->point_step*point_index + attribute_offset)];
 
             // read value from Draco pointcloud to out_data
-            attribute->GetValue(draco::AttributeValueIndex(point_index), out_data);
-
+            attribute->GetValue(draco::AttributeValueIndex(point_index), out_data);  //! DEBUG: Invalid write of size 2, Invalid write of size 1
         }
     }
 
@@ -55,12 +56,12 @@ sensor_msgs::PointCloud2 DracotoPC2::DracotoPC2::convert(){
     sensor_msgs::PointCloud2 PC2;
 
     // copy PointCloud2 data to vector
-    std::vector<uint8_t> vec_data(data, data + number_of_points*compressed_PC2_->point_step);
-    PC2.data = vec_data;
-
+    std::vector<uint8_t> vec_data(data, data + number_of_points*compressed_PC2_->point_step); //! Invalid read of size 8, Address 0x1ffee0bbd0 is on thread 1's stack
     // copy PointCloud2 description (header, width, ...)
     assign_description_of_PointCloud2(PC2, compressed_PC2_);
+    PC2.data = vec_data;
 
-    return std::move(PC2);
+   return std::move(PC2);
+   //return PC2;
 }
 
