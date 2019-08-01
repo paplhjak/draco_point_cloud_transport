@@ -24,7 +24,10 @@ public:
     //! Method for converting into sensor_msgs::PointCloud2
     sensor_msgs::PointCloud2 convert();
 
-private:
+    //!
+    std::vector<uint8_t> get_data();
+
+        private:
     //! Message to be converted
     std::unique_ptr<draco::PointCloud> pc_;
 

@@ -191,14 +191,17 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert()
     // finalize point cloud *** builder.Finalize(bool deduplicate) ***
     std::unique_ptr<draco::PointCloud> pc = builder.Finalize(false);
 
-    /*
-   // TODO: add check if buffer created succesfully
-   ASSERT_TRUE(res != nullptr);
+    // RAISE ERROR - INVALID DATA TYPE
+    if (pc == nullptr)
+    {
+        ROS_FATAL_STREAM("Conversion from sensor_msgs::PointCloud2 to Draco::PointCloud failed");
+        return;
+    }
 
-
-   // TODO: add check if buffer size is correct (DO NOT CHECK if deduplicate is true)
-   ASSERT_EQ(res->num_points(), number_of_points);
-    */
+    if (pc->num_points()!=number_of_points)
+    {
+        ROS_WARN_STREAM("Number of points in Draco::PointCloud differs from sensor_msgs::PointCloud2. Did user set deduplication on?");
+    }
     return pc;
 }
 

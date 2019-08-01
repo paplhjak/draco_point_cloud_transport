@@ -9,7 +9,6 @@
 // draco library
 #include <draco/compression/encode.h>
 
-
 #include <vector>
 
 namespace draco_point_cloud_transport
@@ -44,6 +43,7 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
     PC2toDraco converter(message);
     std::unique_ptr<draco::PointCloud> pc = converter.convert();
     draco::EncoderBuffer encode_buffer;
+
     draco::Encoder encoder;
 
     // set quantization of attribute types
@@ -64,23 +64,20 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
         ROS_ERROR("Draco Point Cloud Transport - compression allows encoding/decoding speed in interval [0,10] (input encode_speed is: %d, input decode_speed is: %d)", config_.encode_speed , config_.decode_speed);
     }
     // kd tree
-    if(config_.method==0)
+    if(config_.method==1)
     {
         encoder.SetEncodingMethod(draco::POINT_CLOUD_KD_TREE_ENCODING);
     }
     // sequential encoding
-    else if(config_.method==1)
+    else if(config_.method==2)
     {
         encoder.SetEncodingMethod(draco::POINT_CLOUD_SEQUENTIAL_ENCODING);
     }
-    // invalid parameter
-    else
-    {
-        //! RAISE ERROR: invalid encoding method
-        ROS_ERROR("Draco Point Cloud Transport - compression allows KD-tree (0) or sequential (1) methods only (input is: %d)", config_.method);
+    // draco will choose automatically - default
+    else {
     }
 
-    //!
+    // encodes point cloud to encode_buffer
     encoder.SetTrackEncodedProperties(false);
     encoder.EncodePointCloudToBuffer(*pc, &encode_buffer);
 
