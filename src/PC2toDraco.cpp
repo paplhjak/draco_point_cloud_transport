@@ -195,7 +195,6 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert()
     if (pc == nullptr)
     {
         ROS_FATAL_STREAM("Conversion from sensor_msgs::PointCloud2 to Draco::PointCloud failed");
-        return;
     }
 
     if (pc->num_points()!=number_of_points)
