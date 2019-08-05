@@ -63,6 +63,9 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
         //! RAISE ERROR: invalid encoding/decoding speed
         ROS_ERROR("Draco Point Cloud Transport - compression allows encoding/decoding speed in interval [0,10] (input encode_speed is: %d, input decode_speed is: %d)", config_.encode_speed , config_.decode_speed);
     }
+
+    // TODO: Commented out for as long as sequential encoding is not working
+    /*
     // kd tree
     if(config_.method==1)
     {
@@ -76,6 +79,10 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
     // draco will choose automatically - default
     else {
     }
+    */
+
+    // TODO: For as long as sequential encoding is not working, use KD-tree only
+    encoder.SetEncodingMethod(draco::POINT_CLOUD_KD_TREE_ENCODING);
 
     // encodes point cloud to encode_buffer
     encoder.SetTrackEncodedProperties(false);
