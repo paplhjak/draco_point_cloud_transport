@@ -1,12 +1,14 @@
 <package>
   <name>draco_point_cloud_transport</name>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
   <description>
-    Draco_point_cloud_transport provides a plugin to point_cloud_transport for sending point clouds
-    encoded with KD tree or sequential compression.
+    draco_point_cloud_transport provides a plugin to point_cloud_transport for sending point clouds
+    encoded with KD tree compression.
   </description>
   <maintainer email="paplhjak@fel.cvut.cz">Jakub Paplham</maintainer>
-  <license>placeholder</license>
+  <license> BSD </license>
+
+  <url type="repository">https://github.com/paplhjak/draco_point_cloud_transport</url>
 
   <author>Jakub Paplham</author>
 
