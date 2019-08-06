@@ -27,7 +27,6 @@ void DracoSubscriber::subscribeImpl(ros::NodeHandle& nh, const std::string& base
 
 void DracoSubscriber::configCb(Config& config, uint32_t level)
 {
-    //TODO: consider adding SetSkipAttribute to config
   config_ = config;
 }
 
@@ -60,6 +59,28 @@ void DracoSubscriber::internalCallback(const draco_point_cloud_transport::Compre
 
     // create decoder object
     draco::Decoder decoder;
+    // set decoder from dynamic reconfiguration
+    if(config_.SkipDequantizationPOSITION)
+    {
+        decoder.SetSkipAttributeTransform(draco::GeometryAttribute::POSITION);
+    }
+    if(config_.SkipDequantizationNORMAL)
+    {
+        decoder.SetSkipAttributeTransform(draco::GeometryAttribute::NORMAL);
+    }
+    if(config_.SkipDequantizationCOLOR)
+    {
+        decoder.SetSkipAttributeTransform(draco::GeometryAttribute::COLOR);
+    }
+    if(config_.SkipDequantizationTEX_COORD)
+    {
+        decoder.SetSkipAttributeTransform(draco::GeometryAttribute::TEX_COORD);
+    }
+    if(config_.SkipDequantizationGENERIC)
+    {
+        decoder.SetSkipAttributeTransform(draco::GeometryAttribute::GENERIC);
+    }
+
     // decode buffer into draco point cloud
     std::unique_ptr<draco::PointCloud> decoded_pc =
             decoder.DecodePointCloudFromBuffer(&decode_buffer).value();

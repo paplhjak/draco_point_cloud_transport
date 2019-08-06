@@ -80,11 +80,10 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
     else {
     }
     */
-
     // TODO: For as long as sequential encoding is not working, use KD-tree only
     encoder.SetEncodingMethod(draco::POINT_CLOUD_KD_TREE_ENCODING);
 
-    // encodes point cloud to encode_buffer
+    // encode point cloud to encode_buffer
     encoder.SetTrackEncodedProperties(false);
     encoder.EncodePointCloudToBuffer(*pc, &encode_buffer);
 
@@ -92,6 +91,8 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
     unsigned char* cast_buffer = (unsigned char*)encode_buffer.data();
     std::vector <unsigned char> vec_data(cast_buffer, cast_buffer + compressed_data_size);
     compressed.compressed_data = vec_data;
+
+
 
     publish_fn(compressed);
 }

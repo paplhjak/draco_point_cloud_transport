@@ -40,10 +40,6 @@ include_directories(include
 
 link_directories(${draco_LIBRARY_DIR})
 
-#TODO: will not compile, unless Draco compiles shared libraries
-#TODO: to allow this, go to draco/CMakeLists.txt and comment out lines:
-#TODO: 888: if(BUILD_SHARED_LIBS), 890: endif()
-
 add_library(${PROJECT_NAME}
         src/draco_publisher.cpp
         src/draco_subscriber.cpp
