@@ -96,8 +96,6 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert()
             case enumval7 : // "g"
             case enumval8 : // "b"
             case enumval9 : // "a"
-            case enumval10 : // "rgb"
-            case enumval11 : // "rgba"
                 switch (field.datatype) {
                     case 1 :
                         att_ids.push_back(
@@ -130,6 +128,75 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert()
                     case 8 :
                         att_ids.push_back(
                                 builder.AddAttribute(draco::GeometryAttribute::COLOR, field.count, draco::DT_FLOAT64));
+                        break;
+                    default:
+                        // RAISE ERROR - INVALID DATA TYPE
+                        ROS_FATAL_STREAM(" INVALID DATA TYPE in PC2toDraco conversion - sensor_msgs::PointField::datatype");
+                        ValidDataType=0;
+                        break;
+                }
+                break;
+
+            // apply the common ROS tweaks
+            case enumval10 : // "rgb"
+            case enumval11 : // "rgba"
+                switch (field.datatype) {
+                    case 5 : // DT_INT32
+                    case 6 : // DT_UINT32
+                    case 7 : // DT_FLOAT32
+                    // TODO: theoretically, setting data type to be 4 times smaller and count to be 4 times larger should work
+                    // TODO: this implementation needs to be tested however and husky.bag point cloud does not include COLOR
+                        att_ids.push_back(
+                                builder.AddAttribute(draco::GeometryAttribute::COLOR, 4 * field.count, draco::DT_UINT8));
+                        break;
+                    case 8 : // DT_FLOAT64
+                        att_ids.push_back(
+                                builder.AddAttribute(draco::GeometryAttribute::COLOR, 4 * field.count, draco::DT_UINT16));
+                        break;
+                    default:
+                        // RAISE ERROR - INVALID DATA TYPE
+                        ROS_FATAL_STREAM(" INVALID DATA TYPE in PC2toDraco conversion - sensor_msgs::PointField::datatype");
+                        ValidDataType=0;
+                        break;
+                }
+                break;
+
+
+            case enumval12 : // "nx"
+            case enumval13 : // "ny"
+            case enumval14 : // "nz"
+                switch (field.datatype) {
+                    case 1 :
+                        att_ids.push_back(
+                                builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count, draco::DT_INT8));
+                        break;
+                    case 2 :
+                        att_ids.push_back(
+                                builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count, draco::DT_UINT8));
+                        break;
+                    case 3 :
+                        att_ids.push_back(
+                                builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count, draco::DT_INT16));
+                        break;
+                    case 4 :
+                        att_ids.push_back(builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count,
+                                                               draco::DT_UINT16));
+                        break;
+                    case 5 :
+                        att_ids.push_back(
+                                builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count, draco::DT_INT32));
+                        break;
+                    case 6 :
+                        att_ids.push_back(builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count,
+                                                               draco::DT_UINT32));
+                        break;
+                    case 7 :
+                        att_ids.push_back(builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count,
+                                                               draco::DT_FLOAT32));
+                        break;
+                    case 8 :
+                        att_ids.push_back(builder.AddAttribute(draco::GeometryAttribute::NORMAL, field.count,
+                                                               draco::DT_FLOAT64));
                         break;
                     default:
                         // RAISE ERROR - INVALID DATA TYPE
@@ -179,7 +246,6 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert()
                         ROS_FATAL_STREAM(" INVALID DATA TYPE in PC2toDraco conversion - sensor_msgs::PointField::datatype");
                         ValidDataType=0;
                         break;
-
                 }
         }
 

@@ -1,21 +1,16 @@
 #ifndef DRACO_POINT_CLOUD_TRANSPORT_PC2TODRACO_H
 #define DRACO_POINT_CLOUD_TRANSPORT_PC2TODRACO_H
-
 // ros
-#include <ros/ros.h> //
+#include <ros/ros.h>
 #include <sensor_msgs/PointField.h>
 #include <sensor_msgs/PointCloud2.h>
-
 // for enumeration in switch(std::string) ...
 #include <map>
 #include <string>
-
 // for dynamic vector arrays
 #include <vector>
-
 // draco
 #include <draco/point_cloud/point_cloud_builder.h>
-
 
 class PC2toDraco {
 public:
@@ -48,6 +43,9 @@ private:
         enumval9,
         enumval10,
         enumval11,
+        enumval12,
+        enumval13,
+        enumval14,
         enumvalEnd };
 
     std::map<std::string, StringValueFieldName> s_mapStringValues;
@@ -67,6 +65,9 @@ private:
         s_mapStringValues["a"] =        enumval9;
         s_mapStringValues["rgb"] =      enumval10;
         s_mapStringValues["rgba"] =     enumval11;
+        s_mapStringValues["nx"] =       enumval12;
+        s_mapStringValues["ny"] =       enumval13;
+        s_mapStringValues["nz"] =       enumval14;
     }
 };
 
