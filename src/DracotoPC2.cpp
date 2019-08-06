@@ -58,6 +58,17 @@ sensor_msgs::PointCloud2 DracotoPC2::DracotoPC2::convert(){
 
     // copy PointCloud2 description (header, width, ...)
     assign_description_of_PointCloud2(PC2, compressed_PC2_);
+
+    // if points were deduplicated, overwrite height and width
+    int deduplicate;
+    pc_->metadata()->GetEntryInt("deduplicate", &deduplicate);
+
+    if (deduplicate == 1)
+    {
+        PC2.width=number_of_points;
+        PC2.height=1;
+    }
+
     PC2.data = vec_data;
 
    return std::move(PC2);

@@ -21,7 +21,7 @@ public:
     //~PC2toDraco();
 
     //! Method for converting into Draco pointcloud
-    std::unique_ptr<draco::PointCloud> convert();
+    std::unique_ptr<draco::PointCloud> convert(bool deduplicate_flag);
 
 private:
     //! Message to be converted

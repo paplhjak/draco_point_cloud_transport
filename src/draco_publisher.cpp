@@ -41,7 +41,7 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
     assign_description_of_PointCloud2(compressed, message);
 
     PC2toDraco converter(message);
-    std::unique_ptr<draco::PointCloud> pc = converter.convert();
+    std::unique_ptr<draco::PointCloud> pc = converter.convert(config_.deduplicate);
     draco::EncoderBuffer encode_buffer;
 
     draco::Encoder encoder;
