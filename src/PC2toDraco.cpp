@@ -26,8 +26,10 @@ PC2toDraco::PC2toDraco(sensor_msgs::PointCloud2 PC2)
 //PC2toDraco::~PC2toDraco(){}
 
 //! Method for converting into Draco pointcloud using draco::PointCloudBuilder
-std::unique_ptr<draco::PointCloud> PC2toDraco::convert(bool deduplicate_flag)
+std::unique_ptr<draco::PointCloud> PC2toDraco::convert(bool deduplicate_flag, bool expert_encoding_flag)
 {
+
+
     // object for conversion into Draco Point Cloud format
     draco::PointCloudBuilder builder;
     // number of points in point cloud
@@ -48,7 +50,6 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert(bool deduplicate_flag)
     for (sensor_msgs::PointField field : PC2_.fields) {
 
         rgba_tweak = false;
-
         // attribute type switch
         // TODO: add texture coordinate (TEX_COORD) recognized names
         switch (s_mapStringValues[field.name]) {

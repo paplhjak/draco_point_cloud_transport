@@ -35,6 +35,8 @@ protected:
   Config config_;
 
   void configCb(Config& config, uint32_t level);
+
+  std::string base_topic_;
 };
 
 } //namespace draco_point_cloud_transport
