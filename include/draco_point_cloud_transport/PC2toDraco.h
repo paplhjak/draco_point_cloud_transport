@@ -15,7 +15,7 @@
 class PC2toDraco {
 public:
     //! Constructor.
-    explicit PC2toDraco(sensor_msgs::PointCloud2 PC2);
+    explicit PC2toDraco(sensor_msgs::PointCloud2 PC2, std::string topic);
 
     //! Destructor
     //~PC2toDraco();
@@ -69,6 +69,9 @@ private:
         s_mapStringValues["ny"] =       enumval13;
         s_mapStringValues["nz"] =       enumval14;
     }
+
+    std::string base_topic_;
+
 };
 
 

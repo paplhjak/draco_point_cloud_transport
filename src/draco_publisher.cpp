@@ -43,7 +43,7 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
 
     assign_description_of_PointCloud2(compressed, message);
 
-    PC2toDraco converter(message);
+    PC2toDraco converter(message, base_topic_);
     std::unique_ptr<draco::PointCloud> pc = converter.convert(config_.deduplicate, config_.expert_encoding);
     draco::EncoderBuffer encode_buffer;
 
@@ -78,7 +78,7 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
                     }
                     else
                     {
-                        ROS_ERROR_STREAM ("Attribute type not specified for " + field.name + "field entry.");
+                        ROS_ERROR_STREAM ("Attribute type not specified for " + field.name + "field entry. Using regular encoder instead.");
                         expert_settings_ok = false;
                     }
                     att_id++;
