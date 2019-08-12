@@ -44,14 +44,14 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
     assign_description_of_PointCloud2(compressed, message);
 
     PC2toDraco converter(message, base_topic_);
-    std::unique_ptr<draco::PointCloud> pc = converter.convert(config_.deduplicate, config_.expert_encoding);
+    std::unique_ptr<draco::PointCloud> pc = converter.convert(config_.deduplicate, config_.expert_attribute_types);
     draco::EncoderBuffer encode_buffer;
 
     // tracks if all necessary parameters were set for expert encoder
     bool expert_settings_ok = true;
 
     // expert encoder
-    if (config_.expert_encoding) {
+    if (config_.expert_quantization) {
 
         draco::ExpertEncoder expert_encoder(*pc);
         expert_encoder.SetSpeedOptions(config_.encode_speed, config_.decode_speed);
@@ -72,13 +72,14 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
 
                 for (sensor_msgs::PointField field : message.fields)
                 {
-                    if (ros::param::get(base_topic_ + "/draco/attribute_mapping/quantization_bits/" + field.name, attribute_quantization_bits))
+                    if (ros::param::getCached(base_topic_ + "/draco/attribute_mapping/quantization_bits/" + field.name, attribute_quantization_bits))
                     {
                         expert_encoder.SetAttributeQuantization(att_id, attribute_quantization_bits);
                     }
                     else
                     {
-                        ROS_ERROR_STREAM ("Attribute type not specified for " + field.name + "field entry. Using regular encoder instead.");
+                        ROS_ERROR_STREAM ("Attribute quantization not specified for " + field.name + " field entry. Using regular encoder instead.");
+                        ROS_INFO_STREAM ("To set quantization for " + field.name + " field entry, set " + base_topic_ + "/draco/attribute_mapping/quantization_bits/" + field.name);
                         expert_settings_ok = false;
                     }
                     att_id++;
@@ -104,7 +105,7 @@ void DracoPublisher::publish(const sensor_msgs::PointCloud2& message, const Publ
     // expert encoder end
 
     // regular encoder
-    if ((!config_.expert_encoding) || (!expert_settings_ok))
+    if ((!config_.expert_quantization) || (!expert_settings_ok))
     {
         draco::Encoder encoder;
         encoder.SetSpeedOptions(config_.encode_speed, config_.decode_speed);

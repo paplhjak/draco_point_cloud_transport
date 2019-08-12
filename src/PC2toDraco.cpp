@@ -7,6 +7,9 @@ PC2toDraco::PC2toDraco(sensor_msgs::PointCloud2 PC2, std::string topic)
     PC2_ = PC2;
     base_topic_ = topic;
 
+    /*
+
+     // data type enumeration used in PointField
     const char *PointFieldDataTypes[] =
             {
                     "Undefined",
@@ -19,6 +22,7 @@ PC2toDraco::PC2toDraco(sensor_msgs::PointCloud2 PC2, std::string topic)
                     "FLOAT32",
                     "FLOAT64"
             };
+*/
 
     Initialize();
 }
@@ -58,7 +62,8 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert(bool deduplicate_flag, bo
 
         if (expert_encoding_flag) // find attribute type in user specified parameters
         {
-            if (ros::param::get(base_topic_ + "/draco/attribute_mapping/attribute_type/" + field.name, expert_attribute_data_type))
+            rgba_tweak = false;
+            if (ros::param::getCached(base_topic_ + "/draco/attribute_mapping/attribute_type/" + field.name, expert_attribute_data_type))
             {
                 if (expert_attribute_data_type.compare("POSITION")==0) // if data type is POSITION
                 {
@@ -71,6 +76,8 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert(bool deduplicate_flag, bo
                 else if (expert_attribute_data_type.compare("COLOR")==0) // if data type is COLOR
                 {
                     attribute_type = draco::GeometryAttribute::COLOR;
+                    ros::param::getCached(base_topic_ + "/draco/attribute_mapping/rgba_tweak/" + field.name, rgba_tweak);
+
                 }
                 else if (expert_attribute_data_type.compare("TEX_COORD")==0) // if data type is TEX_COORD
                 {
@@ -89,6 +96,7 @@ std::unique_ptr<draco::PointCloud> PC2toDraco::convert(bool deduplicate_flag, bo
             else
             {
                 ROS_ERROR_STREAM ("Attribute data type not specified for " + field.name + " field entry. Using regular type recognition instead.");
+                ROS_INFO_STREAM ("To set attribute type for " + field.name + " field entry, set " + base_topic_ + "/draco/attribute_mapping/attribute_type/" + field.name);
                 expert_settings_ok = false;
             }
         }
