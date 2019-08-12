@@ -89,4 +89,4 @@ $ rosparam set /base_topic/draco/attribute_mapping/rgba_tweak/rgb true
 ![subscriber_settings](https://github.com/paplhjak/draco_point_cloud_transport/blob/master/readme_images/subscriber.png)
 
 ### Set Skip Dequantization of Attribute Types
-**SkipDequantizationPOSITION**, **SkipDequantizationNORMAL**, **SkipDequantizationCOLOR** etc. tells the decoder to skip dequantization of given attribute types.
+**SkipDequantizationPOSITION**, **SkipDequantizationNORMAL**, **SkipDequantizationCOLOR** etc. options tell the decoder to skip dequantization of given attribute types.
